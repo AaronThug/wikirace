@@ -1,0 +1,463 @@
+/* Grundlegende Styles */
+:root {
+    --primary-color: #1a73e8;
+    --primary-color-dark: #0d47a1;
+    --secondary-color: #f5f5f5;
+    --text-color: #333;
+    --text-light: #666;
+    --bg-color: #ffffff;
+    --border-color: #e0e0e0;
+    --success-color: #4caf50;
+    --error-color: #f44336;
+    --warning-color: #ff9800;
+    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--secondary-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+header h1 {
+    color: var(--primary-color);
+    font-size: 32px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-button {
+    padding: 8px 16px;
+    background-color: var(--secondary-color);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+main {
+    flex: 1;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+/* Screen-spezifische Styles */
+.screen {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.screen.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Button Styles */
+.primary-button, .secondary-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.primary-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.primary-button:hover {
+    background-color: var(--primary-color-dark);
+}
+
+.secondary-button {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.secondary-button:hover {
+    background-color: var(--border-color);
+}
+
+.button-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+/* Home Screen */
+#homeScreen {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+#homeScreen h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+#homeScreen p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.instructions {
+    max-width: 600px;
+    margin: 40px auto;
+    text-align: left;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+}
+
+.instructions h3 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.instructions ul {
+    padding-left: 20px;
+}
+
+.instructions li {
+    margin-bottom: 10px;
+}
+
+/* Setup Screens */
+.setup-form {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#waitingRoom {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.loader {
+    border: 5px solid var(--secondary-color);
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Game Screen */
+.game-header {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.start-target-info {
+    display: flex;
+    gap: 20px;
+}
+
+.start-article, .target-article {
+    max-width: 220px;
+}
+
+.start-article h3, .target-article h3 {
+    color: var(--primary-color);
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.player-info {
+    display: flex;
+    gap: 20px;
+    font-weight: 500;
+}
+
+.multiplayer-info {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.player-status {
+    display: flex;
+    justify-content: space-around;
+}
+
+.player-status-item {
+    padding: 8px 15px;
+    border-radius: 4px;
+    background-color: var(--bg-color);
+    box-shadow: var(--box-shadow);
+}
+
+.game-content {
+    height: 600px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.wiki-frame {
+    height: 100%;
+    position: relative;
+}
+
+#wikiFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Game Over Screen */
+#gameOverScreen {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+#gameOverScreen h2 {
+    color: var(--primary-color);
+    margin-bottom: 30px;
+}
+
+.game-stats {
+    max-width: 600px;
+    margin: 0 auto 30px;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 8px;
+}
+
+.game-stats p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.player-results {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.player-result {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: var(--bg-color);
+    min-width: 200px;
+}
+
+.player-result h4 {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+/* Ranking Screen */
+.ranking-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    background-color: var(--secondary-color);
+    border: none;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.2s ease;
+}
+
+.tab-button.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.ranking-content {
+    display: none;
+    padding: 20px;
+    background-color: var(--secondary-color);
+    border-radius: 0 8px 8px 8px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.ranking-content.active {
+    display: block;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ranking-table th, .ranking-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.ranking-table th {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.ranking-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.personal-stats-container {
+    padding: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.stat-item {
+    background-color: var(--bg-color);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.recent-games {
+    margin-top: 20px;
+}
+
+.recent-game-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: var(--box-shadow);
+}
+
+.recent-game-result {
+    font-weight: 500;
+}
+
+.result-win {
+    color: var(--success-color);
+}
+
+.result-loss {
+    color: var(--error-color);
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}

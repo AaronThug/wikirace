@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WikiRace - Das Wikipedia-Wettrennen</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.5.1/dist/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>WikiRace</h1>
+            <div class="nav-buttons">
+                <button id="homeButton" class="nav-button">Home</button>
+                <button id="singlePlayerButton" class="nav-button">Einzelspieler</button>
+                <button id="multiPlayerButton" class="nav-button">Multiplayer</button>
+                <button id="rankingButton" class="nav-button">Rangliste</button>
+            </div>
+        </header>
+
+        <main>
+            <!-- Home Screen -->
+            <div id="homeScreen" class="screen active">
+                <h2>Willkommen bei WikiRace!</h2>
+                <p>Navigiere von einem zufälligen Wikipedia-Artikel zum Zielartikel, indem du nur auf Links klickst.</p>
+                <div class="button-container">
+                    <button id="startSinglePlayer" class="primary-button">Einzelspieler starten</button>
+                    <button id="startMultiPlayer" class="primary-button">Multiplayer starten</button>
+                </div>
+                <div class="instructions">
+                    <h3>Spielanleitung:</h3>
+                    <ul>
+                        <li>Du startest auf einem zufälligen Wikipedia-Artikel.</li>
+                        <li>Dein Ziel ist es, zum Zielartikel zu gelangen, indem du nur auf Links klickst.</li>
+                        <li>Je schneller du das Ziel erreichst, desto mehr Punkte erhältst du.</li>
+                        <li>Im Multiplayer-Modus spielst du gegen einen anderen Spieler.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Single Player Setup Screen -->
+            <div id="singlePlayerSetup" class="screen">
+                <h2>Einzelspieler-Modus</h2>
+                <div class="setup-form">
+                    <div class="form-group">
+                        <label for="playerName">Dein Name:</label>
+                        <input type="text" id="playerName" placeholder="Gib deinen Namen ein">
+                    </div>
+                    <button id="startSinglePlayerGame" class="primary-button">Spiel starten</button>
+                </div>
+            </div>
+
+            <!-- Multi Player Setup Screen -->
+            <div id="multiPlayerSetup" class="screen">
+                <h2>Multiplayer-Modus</h2>
+                <div class="setup-form">
+                    <div class="form-group">
+                        <label for="multiPlayerName">Dein Name:</label>
+                        <input type="text" id="multiPlayerName" placeholder="Gib deinen Namen ein">
+                    </div>
+                    <button id="findOpponent" class="primary-button">Gegner suchen</button>
+                </div>
+                <div id="waitingRoom" class="hidden">
+                    <h3>Warte auf Gegner...</h3>
+                    <div class="loader"></div>
+                    <button id="cancelSearch" class="secondary-button">Abbrechen</button>
+                </div>
+            </div>
+
+            <!-- Game Screen -->
+            <div id="gameScreen" class="screen">
+                <div class="game-header">
+                    <div class="game-info">
+                        <div class="start-target-info">
+                            <div class="start-article">
+                                <h3>Start:</h3>
+                                <p id="startArticle"></p>
+                            </div>
+                            <div class="target-article">
+                                <h3>Ziel:</h3>
+                                <p id="targetArticle"></p>
+                            </div>
+                        </div>
+                        <div class="player-info">
+                            <div class="timer">
+                                <span>Zeit: </span>
+                                <span id="timer">00:00</span>
+                            </div>
+                            <div class="clicks">
+                                <span>Klicks: </span>
+                                <span id="clickCount">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="multiplayerInfo" class="multiplayer-info hidden">
+                        <div class="player-status">
+                            <div id="player1Status" class="player-status-item">
+                                <span id="player1Name">Spieler 1</span>: <span id="player1Clicks">0</span> Klicks
+                            </div>
+                            <div id="player2Status" class="player-status-item">
+                                <span id="player2Name">Spieler 2</span>: <span id="player2Clicks">0</span> Klicks
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-content">
+                    <div id="wikiContent" class="wiki-frame">
+                        <div class="loader"></div>
+                        <iframe id="wikiFrame" src="about:blank"></iframe>
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                    <button id="giveUp" class="secondary-button">Aufgeben</button>
+                    <button id="restartGame" class="primary-button hidden">Neu starten</button>
+                </div>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="gameOverScreen" class="screen">
+                <h2 id="gameOverTitle">Spiel beendet!</h2>
+                <div id="gameOverSinglePlayer">
+                    <div class="game-stats">
+                        <p>Ziel erreicht in <span id="finalTime">00:00</span>!</p>
+                        <p>Anzahl der Klicks: <span id="finalClicks">0</span></p>
+                        <p>Deine Punkte: <span id="finalScore">0</span></p>
+                    </div>
+                </div>
+                <div id="gameOverMultiPlayer" class="hidden">
+                    <div class="game-stats">
+                        <h3 id="winnerAnnouncement">Spieler 1 hat gewonnen!</h3>
+                        <div class="player-results">
+                            <div class="player-result">
+                                <h4 id="player1Result">Spieler 1</h4>
+                                <p>Zeit: <span id="player1Time">00:00</span></p>
+                                <p>Klicks: <span id="player1FinalClicks">0</span></p>
+                                <p>ELO: <span id="player1Elo">1000</span> (<span id="player1EloDiff">+0</span>)</p>
+                            </div>
+                            <div class="player-result">
+                                <h4 id="player2Result">Spieler 2</h4>
+                                <p>Zeit: <span id="player2Time">00:00</span></p>
+                                <p>Klicks: <span id="player2FinalClicks">0</span></p>
+                                <p>ELO: <span id="player2Elo">1000</span> (<span id="player2EloDiff">+0</span>)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-over-buttons">
+                    <button id="playAgain" class="primary-button">Nochmal spielen</button>
+                    <button id="returnHome" class="secondary-button">Zurück zum Hauptmenü</button>
+                </div>
+            </div>
+
+            <!-- Ranking Screen -->
+            <div id="rankingScreen" class="screen">
+                <h2>Rangliste</h2>
+                <div class="ranking-tabs">
+                    <button id="globalRankingTab" class="tab-button active">Globale Rangliste</button>
+                    <button id="personalStatsTab" class="tab-button">Persönliche Statistiken</button>
+                </div>
+                <div id="globalRanking" class="ranking-content active">
+                    <table class="ranking-table">
+                        <thead>
+                            <tr>
+                                <th>Rang</th>
+                                <th>Spieler</th>
+                                <th>ELO</th>
+                                <th>Siege</th>
+                                <th>Niederlagen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rankingTableBody">
+                            <!-- Wird dynamisch gefüllt -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="personalStats" class="ranking-content">
+                    <div class="personal-stats-container">
+                        <h3 id="personalStatsName">Spielername</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-label">ELO</span>
+                                <span id="personalElo" class="stat-value">1000</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Rang</span>
+                                <span id="personalRank" class="stat-value">#-</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Siege</span>
+                                <span id="personalWins" class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Niederlagen</span>
+                                <span id="personalLosses" class="stat-value">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Schnellste Zeit</span>
+                                <span id="personalBestTime" class="stat-value">--:--</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Wenigste Klicks</span>
+                                <span id="personalBestClicks" class="stat-value">-</span>
+                            </div>
+                        </div>
+                        <h4>Letzte Spiele</h4>
+                        <div id="recentGames" class="recent-games">
+                            <!-- Wird dynamisch gefüllt -->
+                        </div>
+                    </div>
+                </div>
+                <button id="backFromRanking" class="secondary-button">Zurück</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 WikiRace - Das Wikipedia-Wettrennen</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+    <script src="multiplayer.js"></script>
+</body>
+</html>
